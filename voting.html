@@ -63,16 +63,16 @@
         <h1>Anonymous Voting</h1>
         <form id="votingForm">
             <div class="form-group">
-                <label for="question">Ingresa tu pregunta:</label>
-                <input type="text" id="question" name="question" placeholder="Agrega tu pregunta" required>
+                <label for="question">Enter your question:</label>
+                <input type="text" id="question" name="question" placeholder="Add your question" required>
             </div>
             <hr>
             <div class="form-group options-container">
-                <label for="option1">Opción 1:</label>
-                <input type="text" id="option1" name="option1" placeholder="Agrega la primera opción" required>
+                <label for="option1">Option 1:</label>
+                <input type="text" id="option1" name="option1" placeholder="Add the first option" required>
                 
-                <label for="option2">Opción 2:</label>
-                <input type="text" id="option2" name="option2" placeholder="Agrega la segunda opción" required>
+                <label for="option2">Option 2:</label>
+                <input type="text" id="option2" name="option2" placeholder="Add the second option" required>
             </div>
             <button type="button" onclick="addOption()">Add another option</button>
             <button type="submit" class="submit-btn">Submit Vote</button>
@@ -88,16 +88,41 @@
             const newOption = document.createElement('div');
             newOption.classList.add('form-group');
             newOption.innerHTML = `
-                <label for="option${optionCount}">Opción ${optionCount}:</label>
-                <input type="text" id="option${optionCount}" name="option${optionCount}" placeholder="Agrega la opción ${optionCount}" required>
+                <label for="option${optionCount}">Option ${optionCount}:</label>
+                <input type="text" id="option${optionCount}" name="option${optionCount}" placeholder="Add option ${optionCount}" required>
             `;
             optionsContainer.appendChild(newOption);
         }
 
         document.getElementById('votingForm').addEventListener('submit', function(event) {
             event.preventDefault();
-            // Handle form submission logic, such as sending data to a backend
-            alert('Vote submitted!'); // Placeholder action
+
+            // Get the question and options
+            const question = document.getElementById('question').value;
+            const options = [];
+            for (let i = 1; i <= optionCount; i++) {
+                const option = document.getElementById(`option${i}`).value;
+                options.push(option);
+            }
+
+            // Check for empty options
+            if (question.trim() === '' || options.some(opt => opt.trim() === '')) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            // Store the poll in localStorage
+            const poll = { question, options };
+            let polls = JSON.parse(localStorage.getItem('polls')) || [];
+            polls.push(poll);
+            localStorage.setItem('polls', JSON.stringify(polls));
+
+            // Log to check if it's being saved
+            console.log('Poll saved:', poll);
+            console.log('All polls:', polls);
+
+            // Redirect to the "View Polls" page
+            window.location.href = 'view-polls.html';
         });
     </script>
 </body>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Polls</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+        }
+        .polls-container {
+            width: 90%;
+            max-width: 600px;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .polls-container h1 {
+            text-align: center;
+        }
+        .poll-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .poll-list li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .poll-list li a {
+            text-decoration: none;
+            color: #007bff;
+            cursor: pointer;
+        }
+        .poll-list li a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-buttons">
+        <button class="back-btn" onclick="history.back()">Go Back</button>
+        <button class="home-btn" onclick="window.location.href='home.html'">Go Home</button>
+    </div>    
+    <div class="polls-container">
+        <h1>Available Polls</h1>
+        <ul id="pollList" class="poll-list"></ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const pollList = document.getElementById('pollList');
+            let polls = JSON.parse(localStorage.getItem('polls')) || [];
+
+            // Display each poll as a list item
+            if (polls.length > 0) {
+                polls.forEach((poll, index) => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `<a onclick="vote(${index})">${poll.question}</a>`;
+                    pollList.appendChild(listItem);
+                });
+            } else {
+                pollList.innerHTML = '<li>No polls available.</li>';
+            }
+        });
+
+        // Function to redirect to vote.html with the selected poll
+        function vote(index) {
+            // Store the selected poll index in localStorage
+            localStorage.setItem('selectedPollIndex', index);
+
+            // Redirect to the vote page
+            window.location.href = 'vote.html';
+        }
+    </script>
+</body>
+</html>

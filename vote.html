@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote on Poll</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+            flex-direction: column;
+        }
+        .vote-container {
+            width: 90%;
+            max-width: 500px;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group input[type="radio"] {
+            margin-right: 10px;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+        .chart-container {
+            width: 100%;
+            max-width: 500px;
+            margin-top: 20px;
+        }
+        .nav-buttons {
+            margin-top: 20px;
+        }
+        .nav-buttons button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+        .nav-buttons .home-btn {
+            background-color: #007bff;
+            color: white;
+        }
+        .nav-buttons .back-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="vote-container">
+        <h1 id="pollQuestion">Vote on Poll</h1>
+        <form id="voteForm">
+            <div id="pollOptions" class="form-group"></div>
+            <button type="submit" class="submit-btn">Submit Vote</button>
+        </form>
+        <div class="chart-container">
+            <canvas id="resultsChart"></canvas>
+        </div>
+        <div class="nav-buttons">
+            <button class="back-btn" onclick="history.back()">Go Back</button>
+            <button class="home-btn" onclick="window.location.href='home.html'">Go Home</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const pollQuestion = document.getElementById('pollQuestion');
+            const pollOptions = document.getElementById('pollOptions');
+            const voteForm = document.getElementById('voteForm');
+            const resultsChart = document.getElementById('resultsChart').getContext('2d');
+
+            // Retrieve the selected poll index and polls from localStorage
+            const selectedPollIndex = localStorage.getItem('selectedPollIndex');
+            let polls = JSON.parse(localStorage.getItem('polls')) || [];
+            let selectedPoll = polls[selectedPollIndex];
+
+            // Initialize vote counts if not present
+            if (!selectedPoll.votes) {
+                selectedPoll.votes = Array(selectedPoll.options.length).fill(0);
+            }
+
+            // Display the poll question and options
+            pollQuestion.textContent = selectedPoll.question;
+
+            selectedPoll.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.innerHTML = `
+                    <input type="radio" name="pollOption" value="${index}" id="option${index}" required>
+                    <label for="option${index}">${option}</label>
+                `;
+                pollOptions.appendChild(optionDiv);
+            });
+
+            // Handle form submission
+            voteForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const selectedOption = document.querySelector('input[name="pollOption"]:checked').value;
+
+                // Increment the vote count for the selected option
+                selectedPoll.votes[selectedOption]++;
+                polls[selectedPollIndex] = selectedPoll;
+                localStorage.setItem('polls', JSON.stringify(polls));
+
+                // Display results
+                displayResults(selectedPoll);
+            });
+
+            // Function to display the results in a chart
+            function displayResults(poll) {
+                const chartData = {
+                    labels: poll.options,
+                    datasets: [{
+                        label: 'Votes',
+                        data: poll.votes,
+                        backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545', '#17a2b8'],
+                    }]
+                };
+                new Chart(resultsChart, {
+                    type: 'bar',
+                    data: chartData,
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                precision: 0
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Show existing results if votes already exist
+            if (selectedPoll.votes.some(vote => vote > 0)) {
+                displayResults(selectedPoll);
+            }
+        });
+    </script>
+</body>
+</html>
