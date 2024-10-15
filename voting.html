@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anonymous Voting System</title>
+    <title>ShhOpinión</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -60,22 +60,23 @@
 </head>
 <body>
     <div class="voting-container">
-        <h1>Anonymous Voting</h1>
+        <h1>Llena los detalles de tu encuesta</h1>
         <form id="votingForm">
             <div class="form-group">
-                <label for="question">Enter your question:</label>
-                <input type="text" id="question" name="question" placeholder="Add your question" required>
+                <label for="question">Pregunta</label>
+                <input type="text" id="question" name="question" placeholder="Agrega tu pregunta" required>
             </div>
             <hr>
             <div class="form-group options-container">
-                <label for="option1">Option 1:</label>
-                <input type="text" id="option1" name="option1" placeholder="Add the first option" required>
+                <label for="option1">Opción 1:</label>
+                <input type="text" id="option1" name="option1" placeholder="Agrega la primera opción" required>
                 
-                <label for="option2">Option 2:</label>
-                <input type="text" id="option2" name="option2" placeholder="Add the second option" required>
+                <label for="option2">Opción 2:</label>
+                <input type="text" id="option2" name="option2" placeholder="Agrega la segunda opción" required>
             </div>
-            <button type="button" onclick="addOption()">Add another option</button>
-            <button type="submit" class="submit-btn">Submit Vote</button>
+            <button type="button" onclick="addOption()">Agrega otra opción</button>
+            <hr>
+            <button type="submit" class="submit-btn">Enviar Encuesta</button>
         </form>
     </div>
 
@@ -89,7 +90,7 @@
             newOption.classList.add('form-group');
             newOption.innerHTML = `
                 <label for="option${optionCount}">Option ${optionCount}:</label>
-                <input type="text" id="option${optionCount}" name="option${optionCount}" placeholder="Add option ${optionCount}" required>
+                <input type="text" id="option${optionCount}" name="option${optionCount}" placeholder="Agrega opción ${optionCount}" required>
             `;
             optionsContainer.appendChild(newOption);
         }
