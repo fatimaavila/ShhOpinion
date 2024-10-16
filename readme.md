@@ -1,1 +1,3 @@
-## Este es un repositorio para tech and freedom
+## ShhOpinión 🤫
+### Un espacio para compartir tu opinión de forma discreta y segura
+
